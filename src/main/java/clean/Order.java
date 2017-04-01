@@ -22,11 +22,14 @@ public class Order implements Serializable {
     @NotNull
     private OrderNumber number;
 
+    @Enumerated
+    private OrderType type;
+
     @ElementCollection
     private List<OrderItem> items = Lists.newLinkedList();
 
     @ElementCollection
-    private List<OrderItem> discountItems = Lists.newLinkedList();
+    private List<OrderItem> discountedItems = Lists.newLinkedList();
 
     private Order(OrderNumber number) {
         this.number = number;
@@ -35,18 +38,6 @@ public class Order implements Serializable {
     public static Order of(OrderNumber number) {
         checkNotNull(number);
         return new Order(number);
-    }
-
-    public void addItem(OrderItem item) {
-        if (!items.contains(item)) {
-            items.add(item);
-        }
-    }
-
-    public void apply(OrderItemOperation operation) {
-        items = items.stream()
-                .map(operation)
-                .collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -62,7 +53,24 @@ public class Order implements Serializable {
     }
 
     public OrderItems getDiscountedItems() {
-        return OrderItems.of(discountItems);
+        return OrderItems.of(discountedItems);
+    }
+
+    public void addItem(OrderItem item) {
+        checkNotNull(item);
+        if (!items.contains(item)) {
+            items.add(item);
+        }
+    }
+
+    public void apply(OrderOperation operations) {
+        items = items.stream()
+                .map(operations)
+                .collect(Collectors.toList());
+    }
+
+    public String getDelivery() {
+        return type.getDelivery();
     }
 
 }

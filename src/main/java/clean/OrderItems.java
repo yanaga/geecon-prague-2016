@@ -2,11 +2,12 @@ package clean;
 
 import com.google.common.collect.ForwardingList;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class OrderItems extends ForwardingList<OrderItem> implements Serializable {
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class OrderItems extends ForwardingList<OrderItem> {
 
     private final List<OrderItem> delegate;
 
@@ -14,8 +15,9 @@ public class OrderItems extends ForwardingList<OrderItem> implements Serializabl
         this.delegate = delegate;
     }
 
-    static OrderItems of(List<OrderItem> value) {
-        return new OrderItems(value);
+    public static OrderItems of(List<OrderItem> delegate) {
+        checkNotNull(delegate);
+        return new OrderItems(delegate);
     }
 
     @Override
@@ -23,9 +25,9 @@ public class OrderItems extends ForwardingList<OrderItem> implements Serializabl
         return delegate;
     }
 
-    public Integer getAmount() {
+    public Integer getQuantity() {
         return delegate.stream()
-                .map(OrderItem::getAmount)
+                .map(OrderItem::getQuantity)
                 .reduce(0, Integer::sum);
     }
 
@@ -34,5 +36,6 @@ public class OrderItems extends ForwardingList<OrderItem> implements Serializabl
                 .map(OrderItem::getValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
 
 }

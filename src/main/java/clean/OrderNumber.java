@@ -1,14 +1,18 @@
 package clean;
 
+import com.google.common.base.MoreObjects;
+
 import java.io.Serializable;
+import java.util.Formattable;
+import java.util.Formatter;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class OrderNumber implements Serializable {
+public class OrderNumber implements Serializable, Formattable {
 
-    final Integer value;
+    private final Integer value;
 
     private OrderNumber(Integer value) {
         this.value = value;
@@ -36,7 +40,14 @@ public class OrderNumber implements Serializable {
 
     @Override
     public String toString() {
-        return Integer.toString(value);
+        return MoreObjects.toStringHelper(this)
+                .add("value", value)
+                .toString();
+    }
+
+    @Override
+    public void formatTo(Formatter formatter, int flags, int width, int precision) {
+        formatter.format("%d", value);
     }
 
     public Integer toInteger() {

@@ -1,12 +1,9 @@
 package clean;
 
-import com.google.common.base.MoreObjects;
-
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Embeddable
@@ -14,23 +11,21 @@ public class OrderItem implements Serializable {
 
     private String product;
 
-    private Integer amount;
+    private Integer quantity;
 
     private BigDecimal value;
 
-    private OrderItem(String product, Integer amount, BigDecimal value) {
+    private OrderItem(String product, Integer quantity, BigDecimal value) {
         this.product = product;
-        this.amount = amount;
+        this.quantity = quantity;
         this.value = value;
     }
 
-    public static OrderItem of(String product, Integer amount, BigDecimal value) {
+    public static OrderItem of(String product, Integer quantity, BigDecimal value) {
         checkNotNull(product);
-        checkNotNull(amount);
-        checkArgument(amount > 0);
+        checkNotNull(quantity);
         checkNotNull(value);
-        checkArgument(value.compareTo(BigDecimal.ZERO) > 0);
-        return new OrderItem(product, amount, value);
+        return new OrderItem(product, quantity, value);
     }
 
     @Override
@@ -45,19 +40,15 @@ public class OrderItem implements Serializable {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("product", product)
-                .add("amount", amount)
-                .add("value", value)
-                .toString();
+        return super.toString();
     }
 
     public String getProduct() {
         return product;
     }
 
-    public Integer getAmount() {
-        return amount;
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public BigDecimal getValue() {

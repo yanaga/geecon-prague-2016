@@ -1,25 +1,24 @@
 package clean;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
+@Converter(autoApply = true)
 public class OrderNumberAttributeConverter implements AttributeConverter<OrderNumber, Integer> {
-
     @Override
     public Integer convertToDatabaseColumn(OrderNumber attribute) {
         if (attribute == null) {
             return null;
-        } else {
-            return attribute.value;
         }
+        return attribute.toInteger();
     }
 
     @Override
     public OrderNumber convertToEntityAttribute(Integer dbData) {
         if (dbData == null) {
             return null;
-        } else {
-            return OrderNumber.of(dbData);
         }
+        return OrderNumber.of(dbData);
     }
 
 }
